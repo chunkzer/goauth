@@ -7,6 +7,7 @@ import (
 
 	"github.com/gorilla/mux"
 	_ "github.com/lib/pq"
+	"github.com/rolandovlz/goauth/models"
 )
 
 func newRouter() *mux.Router {
@@ -18,9 +19,10 @@ func newRouter() *mux.Router {
 }
 
 var db *sql.DB
-var jwtKey = []byte("secret_key")
+var config models.Config
 
 func main() {
+	config.InitConfig()
 	initDB()
 	r := newRouter()
 	log.Fatal(http.ListenAndServe(":8080", r))
@@ -29,7 +31,7 @@ func main() {
 func initDB() {
 	var err error
 
-	db, err = sql.Open("postgres", "dbname=mydb sslmode=disable")
+	db, err = sql.Open("postgres", config.DataBaseURI)
 	if err != nil {
 		panic(err)
 	}

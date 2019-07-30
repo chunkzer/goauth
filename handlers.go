@@ -48,7 +48,7 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 			}
 
 			token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-			tokenString, err := token.SignedString(jwtKey)
+			tokenString, err := token.SignedString([]byte(config.SecretKey))
 			if err != nil {
 				http.Redirect(w, r, "/login", http.StatusInternalServerError)
 			}
@@ -108,7 +108,7 @@ func welcomeHandler(w http.ResponseWriter, r *http.Request) {
 	claims := &models.Claims{}
 
 	token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
-		return jwtKey, nil
+		return []byte(config.SecretKey), nil
 	})
 	if err != nil {
 		if err == jwt.ErrSignatureInvalid {
