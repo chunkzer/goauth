@@ -1,0 +1,2 @@
+SecretKey: 12345
+DataBaseURI: dbname=mydb sslmode=disable
